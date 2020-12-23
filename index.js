@@ -18,8 +18,9 @@ app.get('/', (req, res) => {
 //Create User
 app.post('/users', async (req, res) => {
     try {
-        const { username } = req.body;
-        const newUser = await pool.query('INSERT INTO users (user_name) VALUES($1)', [username]);
+        const { user_name } = req.body;
+        console.log(user_name);
+        const newUser = await pool.query('INSERT INTO users (user_name) VALUES($1)', [user_name]);
         res.json(newUser);
     } catch (error) {
         console.error(err.message);
