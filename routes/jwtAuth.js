@@ -2,7 +2,7 @@ const express = require('express');
 const jwtAuthRouter = express.Router();
 const pool = require('../db');
 const bcrypt = require('bcrypt');
-
+const jwtGenerator = require('./utils/jwtGenerator');
 jwtAuthRouter.post('/register', async (req, res, next) => {
     try {
         const { user_name, user_email, user_password } = req.body;
@@ -18,7 +18,9 @@ jwtAuthRouter.post('/register', async (req, res, next) => {
             const bcryptPassword = await bcrypt.hash(user_password, salt);
 
             const newUser = await pool.query('INSERT INTO users (user_name, user_email, user_password) VALUES($1, $2, $3) returning *', [user_name, user_email, bcryptPassword]);
-            res.json(newUser);
+
+            const token = jwtGenerator(newUser.rows[0].user_id);
+            res.json({token});
         }
     } catch (error) {
         console.error(error.message);
