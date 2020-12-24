@@ -1,6 +1,7 @@
 const express = require('express');
 const jwtAuthRouter = express.Router();
 const pool = require('../db');
+const bcrypt = require('bcrypt');
 
 jwtAuthRouter.post('/register', async (req, res, next) => {
     try {
@@ -10,7 +11,13 @@ jwtAuthRouter.post('/register', async (req, res, next) => {
             res.status(400).send('this email is already registered');
         }
         else {
-            const newUser = await pool.query('INSERT INTO users (user_name, user_email, user_password) VALUES($1, $2, $3) returning *', [user_name, user_email, user_password]);
+
+            const saltRound = 10;
+            const salt = await bcrypt.genSalt(saltRound);
+
+            const bcryptPassword = await bcrypt.hash(user_password, salt);
+
+            const newUser = await pool.query('INSERT INTO users (user_name, user_email, user_password) VALUES($1, $2, $3) returning *', [user_name, user_email, bcryptPassword]);
             res.json(newUser);
         }
     } catch (error) {
