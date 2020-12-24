@@ -17,17 +17,18 @@ usersRouter.param('userId', async (req, res, next, id) => {
     }
 });
 
-//Get User
+//Get All Users
 usersRouter.get('/', async (req, res) => {
     try {
         const users = await pool.query('select * from users');
         console.log(users.rows);
-        res.send(users);
+        res.send(users.rows);
     } catch (error) {
         console.error(err.message);
     }
 });
 
+//Get user bu ID
 usersRouter.get('/:userId', async (req, res) => {
     try {
         const user = await pool.query('select * from users where user_id = $1', [req.id]);
@@ -40,8 +41,8 @@ usersRouter.get('/:userId', async (req, res) => {
 //Create User
 usersRouter.post('/', async (req, res) => {
     try {
-        const { user_name } = req.body;
-        const newUser = await pool.query('INSERT INTO users (user_name) VALUES($1) returning *', [user_name]);
+        const { user_name, user_email, user_password } = req.body;
+        const newUser = await pool.query('INSERT INTO users (user_name, user_email, user_passwprd) VALUES($1, $2, $3) returning *', [user_name, user_email, user_password]);
         res.json(newUser);
     } catch (error) {
         console.error(err.message);
@@ -49,20 +50,19 @@ usersRouter.post('/', async (req, res) => {
 });
 
 //Update User
-usersRouter.put('/', async (req, res) => {
+usersRouter.put('/:userId', async (req, res) => {
     try {
-        const {user_name, user_id} = req.body;
-        const updatedUser = await pool.query('update users set user_name = $1 where user_id = $2 returning *', [user_name, user_id]);
+        const {user_name} = req.body;
+        const updatedUser = await pool.query('update users set user_name = $1 where user_id = $2 returning *', [user_name, req.id]);
         res.json(updatedUser);
     } catch (error) {
         console.error(err.message);
     }
 });
 //Delete User
-usersRouter.delete('/', async (req, res) => {
+usersRouter.delete('/:userId', async (req, res) => {
     try {
-        const {user_id} = req.body;
-        const deletedUser = await pool.query('delete from users where user_id = $1 returning *', [user_id]);
+        const deletedUser = await pool.query('delete from users where user_id = $1 returning *', [req.id]);
         res.json(deletedUser);
     } catch (error) {
         console.error(err.message);

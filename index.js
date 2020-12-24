@@ -10,6 +10,7 @@ app.use(express.json()); //req.body
 
 //Routes
 app.use('/users', usersRouter);
+app.use('/Auth', require('./routes/jwtAuth'));
 
 
 app.listen(3000, () => {
