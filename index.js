@@ -16,6 +16,8 @@ app.use('/Auth', require('./routes/jwtAuth'));
 //dashboard route
 app.use('/dashboard', dashboardRouter);
 
+//products route
+app.use('/products', productsRouter);
 
 app.listen(3000, () => {
     console.log('listening on 3000');
