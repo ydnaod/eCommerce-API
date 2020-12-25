@@ -3,8 +3,9 @@ const jwtAuthRouter = express.Router();
 const pool = require('../db');
 const bcrypt = require('bcrypt');
 const jwtGenerator = require('./utils/jwtGenerator');
+const validInfo = require('../middleware/validInfo');
 
-jwtAuthRouter.post('/register', async (req, res, next) => {
+jwtAuthRouter.post('/register', validInfo, async (req, res, next) => {
     try {
         const { user_name, user_email, user_password } = req.body;
         const user = await pool.query('SELECT * from users where user_email = $1', [user_email]);
@@ -29,7 +30,7 @@ jwtAuthRouter.post('/register', async (req, res, next) => {
     }
 });
 
-jwtAuthRouter.post('/login', async (req, res, next) => {
+jwtAuthRouter.post('/login', validInfo, async (req, res, next) => {
     try {
         const { user_email, user_password } = req.body;
         const user = await pool.query('SELECT * from users where user_email = $1', [user_email]);
