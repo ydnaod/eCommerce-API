@@ -5,6 +5,7 @@ const pool = require('./db');
 const usersRouter = require('./routes/users');
 const dashboardRouter = require('./routes/dashboard');
 const productsRouter = require('./routes/products');
+const ordersRouter = require('./routes/orders');
 
 //Middleware
 app.use(cors());
@@ -19,6 +20,9 @@ app.use('/dashboard', dashboardRouter);
 
 //products route
 app.use('/products', productsRouter);
+
+//orders route
+app.use('/orders', ordersRouter)
 
 app.listen(3000, () => {
     console.log('listening on 3000');

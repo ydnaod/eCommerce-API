@@ -7,7 +7,8 @@ create table users (
 
 create table orders (
     order_id serial primary key,
-    user_id integer references users(user_id) not null
+    user_id integer references users(user_id) not null,
+    active boolean not null
 )
 
 create table products (
