@@ -4,11 +4,11 @@ const pool = require('../db');
 
 router.param('orderId', async (req, res, next, id) => {
     try {
-        const order = await pool.query('select * from orders where order_id = $1', [req.params.id]);
+        const order = await pool.query('select * from orders where order_id = $1', [req.params.orderId]);
         if(order.rows.length == 0){
             return res.status(404).send('oops not found');
         }
-        req.id = req.params.id;
+        req.id = req.params.orderId;
         next();
     } catch (error) {
         console.error(error.message);
