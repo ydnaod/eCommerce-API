@@ -4,6 +4,7 @@ const pool = require('../db');
 const bcrypt = require('bcrypt');
 const jwtGenerator = require('./utils/jwtGenerator');
 const validInfo = require('../middleware/validInfo');
+const authorization = require('../middleware/authorization');
 
 jwtAuthRouter.post('/register', validInfo, async (req, res, next) => {
     try {
@@ -53,5 +54,14 @@ jwtAuthRouter.post('/login', validInfo, async (req, res, next) => {
         res.status(500).send('oops server error');
     }
 });
+
+jwtAuthRouter.get('/verify', authorization, async (req, res, next) => {
+    try {
+        res.json(true);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('oops server error');
+    }
+})
 
 module.exports = jwtAuthRouter;
