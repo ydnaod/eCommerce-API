@@ -4,6 +4,7 @@ const app = express();
 const pool = require('./db');
 const usersRouter = require('./routes/users');
 const dashboardRouter = require('./routes/dashboard');
+const productsRouter = require('./routes/products');
 
 //Middleware
 app.use(cors());
