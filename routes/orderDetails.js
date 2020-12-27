@@ -1,6 +1,6 @@
 const express = require('express');
 const pool = require('../db');
-const router = expressRouter();
+const router = express.Router();
 
 router.param('orderId', async (req, res, next, id) => {
 
@@ -17,8 +17,15 @@ router.param('orderId', async (req, res, next, id) => {
 
 })
 
-router.post('/', async (req, res) => {
+router.post('/:orderId', async (req, res) => {
+    try {
 
+        const {product_id, quantity, total} = req.body;
+        const orderDetails = await pool.query('insert into order_details (order_id, product_id, quantity, total) values ($1, $2, $3, $4)', [req.id, product_id, quantity, total]);
+        res.json(orderDetails);
+    } catch (error) {
+        console.error(error.message);
+    }
 })
 
 module.exports = router;
