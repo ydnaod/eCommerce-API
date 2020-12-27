@@ -21,7 +21,7 @@ router.post('/:orderId', async (req, res) => {
     try {
 
         const {product_id, quantity, total} = req.body;
-        const orderDetails = await pool.query('insert into order_details (order_id, product_id, quantity, total) values ($1, $2, $3, $4)', [req.id, product_id, quantity, total]);
+        const orderDetails = await pool.query('insert into order_details (order_id, product_id, quantity, total) values ($1, $2, $3, $4) returning *', [req.id, product_id, quantity, total]);
         res.json(orderDetails);
     } catch (error) {
         console.error(error.message);
