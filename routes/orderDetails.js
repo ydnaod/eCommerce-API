@@ -9,6 +9,9 @@ router.param('orderId', async (req, res, next, id) => {
         if(order.rows.length ==0){
             res.status(404).json('oops order not found');
         }
+        if(order.rows[0].active === false){
+            res.status(404).json('oops order not active');
+        }
         req.id = req.params.orderId;
         next();
     } catch (error) {
@@ -77,6 +80,7 @@ router.post('/:orderId/checkout', async (req, res) => {
         total = '$' + total.toFixed(2).toString();
         order.rows[order.rows.length] = {total};
         order.total = {total};
+        const updateOrder = await pool.query('update orders set active = false where order_id = $1', [req.params.orderId]);
         res.json(order.rows);
     } catch (error) {
         console.error(error.message);
